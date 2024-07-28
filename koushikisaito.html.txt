@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>謎解き作品ギャラリー</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        .news-wrap {
+            height: 200px;
+            overflow-y: scroll;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background: #fff;
+            border-radius: 8px;
+        }
+        .news-item {
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .news-item:last-child {
+            margin-bottom: 0;
+        }
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .card {
+            width: calc(50% - 20px); /* スマホでは各行に2つだけ表示 */
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+        }
+        .card img {
+            width: 100%;
+            height: auto;
+        }
+        .card-content {
+            padding: 15px;
+            text-align: center;
+        }
+        .card-content h3 {
+            margin: 15px 0;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            max-width: 90%;
+            width: 90%;
+            overflow: hidden;
+        }
+        .modal-content h2 {
+            margin-bottom: 20px;
+        }
+        .modal-content p {
+            margin-bottom: 20px;
+        }
+        .modal-content .button-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .modal-content a {
+            display: block;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .modal-content a:hover {
+            background: #0056b3;
+        }
+        .checkbox-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .checkbox-container label {
+            margin: 10px 0;
+        }
+        .modal-content iframe {
+            width: 100%;
+            height: 315px; /* YouTube動画の標準的な高さ */
+        }
+        .modal-content .buttons-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .modal-content .buttons-container button {
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .modal-content .buttons-container button:hover {
+            background: #0056b3;
+        }
+        .modal-content .buttons-container button:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="news-wrap">
+        <div class="news-item" onclick="openNewsModal('とあるLIVEの秘密 期間限定で追加公演開催決定！', 'とあるLIVEの秘密が一周年記念で期間限定で追加公演の開催が決定しました！')">
+            <h4>2024/9/12</h4>
+            <p>とあるLIVEの秘密 期間限定で追加公演開催決定！</p>
+        </div>
+        <div class="news-item" onclick="openNewsModal('とあるボタンからの脱出 開催決定！', '一周年記念でとあるボタンからの脱出が開催決定しました！')">
+            <h4>2024/9/12</h4>
+            <p>とあるボタンからの脱出 開催決定！</p>
+        </div>
+      <div class="news-item" onclick="openNewsModal('かずのチャンネル開設一周年記念動画が公開されました！', 'かずのチャンネル開設から一周年記念に記念動画か公開されました！ぜひ、ご覧ください。')">
+            <h4>2024/9/12</h4>
+            <p>かずのチャンネル開設一周年記念動画が公開されました！</p>
+        </div><div class="news-item" onclick="openNewsModal('かずのチャンネル開設から一周年！', '2023/9/12　に開設されたかずのチャンネルは今日で一周年を迎えました！')">
+            <h4>2024/9/12</h4>
+            <p>かずのチャンネル開設から一周年！</p>
+        </div>
+      <div class="news-item" onclick="openNewsModal('かずの公式サイトオープン！', 'かずの公式がサイトオープン致しました！謎解きイベントなどを掲載していますのでぜひご覧ください！URLはコチラから！https://sites.google.com/view/kazuno/謎解き作品')">
+            <h4>2024/9/12</h4>
+            <p>かずの公式サイトオープン！</p>
+        </div>
+        <!-- その他のニュース -->
+    </div>
+
+    <div class="gallery">
+        <div class="card" onclick="openTicketModal('とあるボタンからの脱出', 'この異世界からあなたの人生が逆転する。かずの初のサイト型謎を解き、驚きの真実をあばきだせ！', 'https://example.com/', 'https://example.com/', [
+            '以下の動画を観覧できました。', 'チェックボックス2の内容', 'チェックボックス3の内容', 'Xなどに謎解き内容などを公開しないでください。'])">
+            <img src="https://image.jimcdn.com/app/cms/image/transf/none/path/s88a90fd7a911f63f/image/i972f7515f5be4ed2/version/1720324003/image.png" alt="とあるボタンからの脱出">
+            <div class="card-content">
+                <h3>とあるボタンからの脱出</h3>
+            </div>
+        </div>
+        <div class="card" onclick="openTicketModal('とある試験の秘密', 'ある試験を受けようとしていたあなた、そこで予想もしていないことが起きる！', 'https://teket.jp/8147/34483/', 'https://t.livepocket.jp/e/mp187/', [
+            '以下の動画を観覧できました。', 'LINEアプリを使用します。', 'パソコンには対応していません。', 'Xなどに謎解き内容などを公開しないでください。'])">
+            <img src="https://teket.jp/data/flyer/34483/Iop5B2kWJF.jpg?t=1713619593" alt="とある試験の秘密">
+            <div class="card-content">
+                <h3>とある試験の秘密</h3>
+            </div>
+        </div>
+        <div class="card" onclick="openTicketModal('とあるLIVEの秘密', '~あなたの友達から送られてきたLIVE動画で事件が起こる~', 'https://teket.jp/8147/28877/', 'https://sites.google.com/view/youisareteimasen/%E3%83%9B%E3%83%BC%E3%83%A0/', [
+            '以下の動画を観覧できました。', 'LINEを使用します。', 'パソコンには対応していません。', 'Xなどに謎解き内容などを公開しないでください。'])">
+            <img src="https://teket.jp/data/flyer/28877/YLJ6NmnfO1.jpg?t=1699073292" alt="とあるLIVEの秘密">
+            <div class="card-content">
+                <h3>とあるLIVEの秘密</h3>
+            </div>
+        </div>
+        <!-- 新しい作品 -->
+        <div class="card" onclick="openTicketModal('あんりからのメール', 'あんりと一緒に会社の闇を暴き出せ！かずの初の謎解き作品。', 'https://teket.jp/8147/28107/', 'https://t.livepocket.jp/e/q5rkg/', [
+            '以下の動画を観覧できました。', 'LINEを使用します。', 'パソコンには対応していません。', 'Xなどに謎解き内容などを公開しないでください。'])">
+            <img src="https://image.jimcdn.com/app/cms/image/transf/none/path/s88a90fd7a911f63f/image/i8c3edde3a918b141/version/1720320677/image.png" alt="あんりからのメール">
+            <div class="card-content">
+                <h3>あんりからのメール</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- ニュースモーダル -->
+    <div id="news-modal" class="modal">
+        <div class="modal-content">
+            <span onclick="closeModal('news-modal')" style="cursor: pointer; float: right; font-size: 24px;">&times;</span>
+            <h2 id="news-title"></h2>
+            <p id="news-details"></p>
+        </div>
+    </div>
+
+    <!-- チケットモーダル -->
+    <div id="ticket-modal" class="modal">
+        <div class="modal-content">
+            <span onclick="closeModal('ticket-modal')" style="cursor: pointer; float: right; font-size: 24px;">&times;</span>
+            <h2 id="ticket-title"></h2>
+            <p id="ticket-description"></p>
+            <button onclick="showPurchaseModal()">チケット購入はこちら</button>
+        </div>
+    </div>
+
+    <!-- 購入確認モーダル -->
+    <div id="purchase-modal" class="modal">
+        <div class="modal-content">
+            <span onclick="closeModal('purchase-modal')" style="cursor: pointer; float: right; font-size: 24px;">&times;</span>
+            <h2>視聴確認</h2>
+            <iframe src="https://www.youtube.com/embed/s3iXI-NDnmM?si=Yh50H-FCVlwqg-4T" frameborder="0" allowfullscreen></iframe>
+            <p>下記のチェックボックスを全てチェックしてください。</p>
+            <div class="checkbox-container" id="checkbox-container">
+                <!-- チェックボックスは動的に生成されます -->
+            </div>
+            <div class="buttons-container">
+                <button id="confirm-btn" disabled>teketで購入する</button>
+                <button id="confirm-btn-2" disabled>livepocketで購入する</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openNewsModal(title, details) {
+            document.getElementById('news-title').innerText = title;
+            document.getElementById('news-details').innerText = details;
+            document.getElementById('news-modal').style.display = 'flex';
+        }
+
+        function openTicketModal(title, description, buyLink1, buyLink2, checkboxTexts) {
+            document.getElementById('ticket-title').innerText = title;
+            document.getElementById('ticket-description').innerText = description;
+            document.getElementById('ticket-modal').style.display = 'flex';
+
+            // モーダルを開いたときに購入リンクを設定
+            document.getElementById('confirm-btn').setAttribute('onclick', `window.open('${buyLink1}', '_blank')`);
+            document.getElementById('confirm-btn-2').setAttribute('onclick', `window.open('${buyLink2}', '_blank')`);
+
+            // チェックボックスを生成
+            const container = document.getElementById('checkbox-container');
+            container.innerHTML = ''; // 前回のチェックボックスをクリア
+            checkboxTexts.forEach(text => {
+                const label = document.createElement('label');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                label.appendChild(checkbox);
+                label.appendChild(document.createTextNode(text));
+                container.appendChild(label);
+            });
+
+            // チェックボックスの状態を監視
+            container.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', () => {
+                    const allChecked = Array.from(container.querySelectorAll('input[type="checkbox"]')).every(cb => cb.checked);
+                    document.getElementById('confirm-btn').disabled = !allChecked;
+                    document.getElementById('confirm-btn-2').disabled = !allChecked;
+                });
+            });
+        }
+
+        function showPurchaseModal() {
+            document.getElementById('ticket-modal').style.display = 'none';
+            document.getElementById('purchase-modal').style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+    </script>
+</body>
+</html>
